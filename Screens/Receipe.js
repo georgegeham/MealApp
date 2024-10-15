@@ -1,18 +1,42 @@
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import { MEALS } from "../Data/data";
 import Ingredient from "../Components/Ingredient";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Star from "../Components/Star";
+// import { FavouriteCtx } from "../Store/Context/FavouritesContext";
+import {
+  addToFavourite,
+  removeFromFavourite,
+} from "../Store/Redux/FavouriteSlice";
 export default function Receipe({ route, navigation }) {
   const [meal] = MEALS.filter((meal) => meal.id === route.params.id);
+  const id = route.params.id;
   const tags = [meal.duration, meal.complexity, meal.affordability];
+  // const favourite = useContext(FavouriteCtx);
+  const FavouriteIds = useSelector((state) => state.favouriteMeals.ids);
+  const inFavourite = FavouriteIds.includes(id);
+  const dispatch = useDispatch();
+  function toggle() {
+    if (inFavourite) {
+      dispatch(removeFromFavourite({ id: id }));
+      console.log("removed");
+    } else {
+      dispatch(addToFavourite({ id: id }));
+      console.log("added");
+    }
+  }
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => {
-        return <Star />;
+        return (
+          <Star toggle={toggle} color={inFavourite ? "orange" : "white"} />
+        );
       },
     });
-  }, [navigation]);
+    // console.log(FavouriteIds);
+  }, [navigation, FavouriteIds]);
   return (
     <ScrollView>
       <View style={styles.container}>

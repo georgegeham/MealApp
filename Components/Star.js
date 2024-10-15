@@ -1,13 +1,8 @@
 import { Pressable } from "react-native";
-import { useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
-export default function Star() {
-  const [color, setColor] = useState("white");
-  function changeColor() {
-    setColor((prev) => (prev === "white" ? "#DCC328" : "white"));
-  }
+export default function Star({ toggle, color }) {
   return (
-    <Pressable onPress={changeColor}>
+    <Pressable onPress={toggle}>
       <Ionicons name="star" size="24" color={color} />
     </Pressable>
   );
